@@ -10,7 +10,7 @@ namespace Neo.Plugins
         private static Random random = new Random();
         public override void Configure()
         {
-            //throw new NotImplementedException();
+            Settings.Load(GetConfiguration());
         }
 
         public bool OnP2PMessage(Message message)
@@ -22,7 +22,7 @@ namespace Neo.Plugins
         {
             if (payload.ConsensusMessage.Type == ConsensusMessageType.PrepareResponse)
             {
-                return random.Next() % 2 == 0; // 50% loss
+                return random.NextDouble() > Settings.Default.LossRate;
             }
             return true;
         }
