@@ -1,16 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <None Update="P2PLossyConsensusPlugin\config.json">
+    <None Update="config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Neo" Version="2.10.3" />
+    <PackageReference Include="Neo" Version="3.3.0" />
+    <PackageReference Include="Neo.Consensus.DBFT" Version="3.3.0" />
+    <PackageReference Include="Neo.ConsoleService" Version="1.2.0" />
   </ItemGroup>
 
 </Project>
