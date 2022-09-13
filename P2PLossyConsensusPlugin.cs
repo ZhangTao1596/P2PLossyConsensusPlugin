@@ -1,8 +1,8 @@
-﻿using Neo.Consensus;
+﻿using System;
+using Neo.Consensus;
 using Neo.ConsoleService;
 using Neo.Network.P2P;
 using Neo.Network.P2P.Payloads;
-using System;
 
 namespace Neo.Plugins
 {
@@ -24,7 +24,7 @@ namespace Neo.Plugins
                 var extensible = message.Payload as ExtensiblePayload;
                 if (extensible.Category == "dBFT")
                 {
-                    var consensus = ConsensusMessage.DeserializeFrom(extensible.Data);
+                    // var consensus = ConsensusMessage.DeserializeFrom(extensible.Data);
                     double sample = rand.Next(100);
                     if (sample * 1.0 / 100 < lossRate)
                     {
@@ -50,7 +50,7 @@ namespace Neo.Plugins
             Console.WriteLine($"lossRate update to {lossRate}");
         }
 
-        [ConsoleCommand("loss rate", Category = "P2PLossyConsensus", Description = "Loss consensus message")]
+        [ConsoleCommand("lossrate", Category = "P2PLossyConsensus", Description = "Loss consensus message")]
         private void OnLossRate()
         {
             Console.WriteLine($"lossRate={lossRate}");
