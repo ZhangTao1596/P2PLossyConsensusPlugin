@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Neo.Consensus;
 using Neo.ConsoleService;
 using Neo.Network.P2P;
@@ -9,7 +10,8 @@ namespace Neo.Plugins
     public class P2PLossyConsensusPlugin : Plugin
     {
         private double lossRate = 0;
-        private Random rand = new Random();
+        private readonly Random rand = new Random();
+        private readonly HashSet<ConsensusMessageType> excludes = new();
 
         protected override void OnSystemLoaded(NeoSystem system)
         {
@@ -24,7 +26,8 @@ namespace Neo.Plugins
                 var extensible = message.Payload as ExtensiblePayload;
                 if (extensible.Category == "dBFT")
                 {
-                    // var consensus = ConsensusMessage.DeserializeFrom(extensible.Data);
+                    var consensus = ConsensusMessage.DeserializeFrom(extensible.Data);
+                    if (excludes.Contains(consensus.Type)) return false;
                     double sample = rand.Next(100);
                     if (sample * 1.0 / 100 < lossRate)
                     {
@@ -35,8 +38,37 @@ namespace Neo.Plugins
             return true;
         }
 
-        [ConsoleCommand("loss", Category = "P2PLossyConsensus", Description = "Loss consensus message")]
-        private void OnLoss(string rate)
+        [ConsoleCommand("lossm", Category = "P2PLossyConsensus", Description = "Loss consensus message")]
+        private void OnLossm(string msgs)
+        {
+            excludes.Clear();
+            Console.WriteLine("excludes clear!");
+            if (msgs == "") return;
+            var ms = msgs.Split(' ');
+            foreach (var msg in ms)
+            {
+                if (Enum.TryParse<ConsensusMessageType>(msg, true, out var toExclude))
+                {
+                    if (!excludes.Add(toExclude))
+                        Console.WriteLine($"{toExclude} already blocked!");
+                    else
+                        Console.WriteLine($"{toExclude} excluded");
+                }
+                else
+                {
+                    Console.WriteLine($"{toExclude} invalid message type!");
+                }
+            }
+        }
+
+        [ConsoleCommand("lossmsg", Category = "P2PLossyConsensus", Description = "Loss consensus message")]
+        private void OnLossmsg()
+        {
+            Console.WriteLine(string.Join(", ", excludes));
+        }
+
+        [ConsoleCommand("lossr", Category = "P2PLossyConsensus", Description = "Loss consensus message")]
+        private void OnLossr(string rate)
         {
             if (rate != "")
             {
