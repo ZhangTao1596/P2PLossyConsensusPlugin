@@ -10,9 +10,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Neo" Version="3.3.0" />
+    <PackageReference Include="Neo" Version="3.4.0-CI01387" />
     <PackageReference Include="Neo.Consensus.DBFT" Version="3.3.0" />
     <PackageReference Include="Neo.ConsoleService" Version="1.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\neo-project\neo-modules\src\DBFTPlugin\DBFTPlugin.csproj" />
   </ItemGroup>
 
 </Project>
